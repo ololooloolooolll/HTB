@@ -1,0 +1,24 @@
+# Connecting openvpn to the HTB platform.
+
+download the ovpn file from the platform, import to router then run the command:
+
+     openvpn --config ./config.ovpn
+     
+NB: only one openvpn client session is supported on the firewall. Disable the current VPN via the GUI and start HTBvpn from cli.
+
+Add the nat rule to the nat rulebase
+
+    echo 'nat on tun0 inet from 192.168.1.0/24 to 10.0.0.0/8 -> (tun0) port 1024:65535 round-robin' > /home/HTB/htbnat
+
+Use pfctl command to add the existing nat rule base:
+
+    pfctl -sn
+    ...
+    pfctl -sn >> /home/HTB/nathtb
+
+Load the new nat rulebase with this command:
+
+    pfctl -N -f /home/HTB/htbnat
+
+
+  
